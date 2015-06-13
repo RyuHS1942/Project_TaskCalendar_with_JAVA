@@ -46,6 +46,9 @@ public class Login_Mo extends JFrame{
 	class ListenForButton implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			Calendal_Mo Calendal = new Calendal_Mo();
+			
+			Data.user = LoginTF.getText();
+			
 			setVisible(false);
 		}
 	}

@@ -31,10 +31,11 @@ public class Date_Mo extends JFrame{
 	JTextArea MemoA;
 	JScrollPane MemoS;
 	
-	
+	Calendal_Mo Calendal = new Calendal_Mo();
+	Login_Mo Login = new Login_Mo();
 	
 	public Date_Mo(){
-		this.setTitle(Calendal.year+"/"+Calendal.month+"/"+Calendal.day);
+		this.setTitle(Calendal.todayyear+"/"+Calendal.todaymonth+"/"+Calendal.todaydate);
 		this.setSize(350,400);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());//상하 분리
@@ -57,10 +58,10 @@ public class Date_Mo extends JFrame{
 		ListC = new JCheckBox();
 		inListP.add(ListC);
 		
-		ListTF = new JTextField();
+		ListTF = new JTextField(15);
 		inListP.add(ListTF);
 		
-		Delete = new JButton();
+		Delete = new JButton("-");
 		inListP.add(Delete);
 		
 		ListS = new JScrollPane();
@@ -76,7 +77,8 @@ public class Date_Mo extends JFrame{
 		MemoA = new JTextArea();
 		MemoP.add(MemoA,BorderLayout.CENTER);
 		//
-		this.add(ListP,MemoP);
+		this.add(ListP);
+		this.add(MemoP);
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//끝내면 저장하는 방식으로
 		this.setVisible(true);

@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -16,6 +17,7 @@ import javax.swing.JPanel;
 
 public class Calendal_Mo<todaydate> extends JFrame{
 	Calendar cal = Calendar.getInstance();
+	MyActionListener ActionListener = new MyActionListener();
 	
 	int todayyear = cal.get(Calendar.YEAR);
 	int todaymonth = cal.get(Calendar.MONTH);
@@ -62,21 +64,29 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		UpP.setLayout(new FlowLayout(FlowLayout.CENTER,40,0));
 		
 		LeftMove = new JButton("<<");
+		LeftMove.addActionListener(ActionListener);
 		UpP.add(LeftMove);
+		//
 		
 		Leftmove = new JButton("<");
+		Leftmove.addActionListener(ActionListener);
 		UpP.add(Leftmove);
+		//
 		
 		YM = new JLabel(todayyear+"  /  "+todaymonth);
 		YM.setSize(60, 0);
 		UpP.add(YM);
 		
 		Rightmove = new JButton(">");
+		Rightmove.addActionListener(ActionListener);
 		UpP.add(Rightmove);
+		//
 		
 		RightMove = new JButton(">>");
+		RightMove.addActionListener(ActionListener);
 		UpP.add(RightMove);
 		//
+		
 		DownP = new JPanel();
 		DownP.setSize(685,340);
 		CalendarP.add(DownP,BorderLayout.CENTER);
@@ -102,8 +112,7 @@ public class Calendal_Mo<todaydate> extends JFrame{
 				DownP.add(dateB);
 				dateB.setEnabled(false);
 			}else{
-				ListenForButton LFB = new ListenForButton();
-				dateB.addActionListener(LFB);
+				//액션
 				DownP.add(dateB);
 				dateB.setText(Date[i-todaydayorder]);
 			}
@@ -111,6 +120,21 @@ public class Calendal_Mo<todaydate> extends JFrame{
 				
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	public void moveMonth(int mon){
+		todaymonth += mon;
+		if(todaymonth>11){
+			while(todaymonth>11){
+				todayyear++;
+				todaymonth -= 12;
+			}
+		}else if(todaymonth<0){
+			while(todaymonth<0){
+				todayyear--;
+				todaymonth += 12;
+			}
+		}
 	}
 
 	public void February(){//윤년 계산
@@ -131,10 +155,19 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		dayorder -= time;
 		return dayorder;
 	}
-	class ListenForButton implements ActionListener{
+	//액션
+	class MyActionListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			Date_Mo Date = new Date_Mo();
-			setVisible(false);
+			if(e.getSource()==LeftMove){
+				moveMonth(-12);
+			}else if(e.getSource()==Leftmove){
+				moveMonth(-1);
+			}else if(e.getSource()==Rightmove){
+				moveMonth(+1);
+			}else if(e.getSource()==RightMove){
+				moveMonth(+12);
+			}
+			YM.setText(todayyear+"  /  "+todaymonth);
 		}
 	}
 }
