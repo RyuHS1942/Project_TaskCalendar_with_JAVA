@@ -6,15 +6,10 @@ import javax.swing.*;
 
 public class Login_Mo extends JFrame{
 	String user;
-	
 	JPanel LoginP;
 	JLabel LoginL;
 	JTextField LoginTF;
 	JButton LoginB;
-	
-	public Login_Mo(String user){
-		this.user = user;
-	}
 	
 	public void LoginMo(){
 		this.setTitle("Login");
@@ -48,12 +43,7 @@ public class Login_Mo extends JFrame{
 	
 	class ListenForButton implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			int year = 0;
-			int month = 0;
-			int date = 0;
-			int dayorder = 0;
-			
-			Calendal_Mo Calendal = new Calendal_Mo(year, month, date, dayorder);
+			Calendal_Mo Calendal = new Calendal_Mo();
 			Calendal.CalendarMo();
 			
 			setVisible(false);

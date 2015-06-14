@@ -5,6 +5,9 @@ import java.awt.GridLayout;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,10 +27,6 @@ import javax.swing.JTextField;
 
 
 public class Date_Mo extends JFrame{
-	int year, month, date, dayorder;
-	String user;
-	String memo;
-	
 	JScrollPane MemoS;
 	JTextArea MemoA;
 	
@@ -36,16 +35,12 @@ public class Date_Mo extends JFrame{
 	JButton DelB;
 	JPanel BLP;
 	
-	Calendal_Mo Calendal = new Calendal_Mo(year, month, date, dayorder);
-	Login_Mo Login = new Login_Mo(user);
+	Calendal_Mo Calendal = new Calendal_Mo();
+	Login_Mo Login = new Login_Mo();
 	ArrayList<Data> Data = new ArrayList<Data>();
 	AddBut AddBut = new AddBut();
 	DelBut DelBut = new DelBut();
-	
-	public Date_Mo(String memo){
-		this.memo = memo;
-	}
-	
+
 	public void DateMo(){
 		this.setTitle(Calendal.year+"/"+Calendal.month+"/"+Calendal.date);
 		this.setLayout(new BorderLayout());
@@ -64,6 +59,7 @@ public class Date_Mo extends JFrame{
 		MemoA = new JTextArea(10,40);
 		MemoS = new JScrollPane();
 		MemoS = new JScrollPane(MemoA);
+		MemoS.setEnabled(false);
 		
 		BLP = new JPanel();
 		BLP.setLayout(new FlowLayout());
@@ -74,7 +70,12 @@ public class Date_Mo extends JFrame{
 		this.add(MemoS,BorderLayout.CENTER);
 		
 		this.pack();
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//끝내면 저장하는 방식으로
+		this.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent e){
+				saveData();
+				dispose();
+			}
+		});
 		this.setVisible(true);
 	}
 	
@@ -91,9 +92,13 @@ public class Date_Mo extends JFrame{
 		Data.add(new Data(year,month,date,day,user,memo));
 	}
 	
-	public void delData(){
+	public void delData(){//데이터 자체를 삭제하기
 		int temp=0;
 		Data.remove(temp);
+	}
+	
+	public static void schData(){
+		
 	}
 	
 	public void saveData(){

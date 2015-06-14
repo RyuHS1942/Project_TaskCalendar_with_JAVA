@@ -12,7 +12,6 @@ public class Data {
 		this.date = date;
 		this.day = day;
 		this.user = user;
-		
 		this.memo = memo;
 	}
 	
