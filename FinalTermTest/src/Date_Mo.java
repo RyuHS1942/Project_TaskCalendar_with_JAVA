@@ -1,5 +1,9 @@
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -35,7 +39,7 @@ public class Date_Mo extends JFrame{
 	Login_Mo Login = new Login_Mo();
 	
 	public Date_Mo(){
-		this.setTitle(Calendal.todayyear+"/"+Calendal.todaymonth+"/"+Calendal.todaydate);
+		this.setTitle(Calendal.year+"/"+Calendal.month+"/"+Calendal.date);
 		this.setSize(350,400);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());//상하 분리
@@ -103,6 +107,25 @@ public class Date_Mo extends JFrame{
 	}
 	
 	public void saveData(){
+		ArrayList<Data> datas = new ArrayList<Data>();
+		FileInputStream fin = null;
+		ObjectInputStream ois = null;
+		try{
+			fin = new FileInputStream("C:\\Users\\ryu\\Downloads\\data.txt");
+			ois = new ObjectInputStream(fin);
+			
+			ArrayList list = (ArrayList) ois.readObject();
+			for(int i=0;i<list.size();i++){
+				datas.add((Data) list.get(i));
+			}
+		}catch(Exception e){
+			System.out.println();
+		}finally{
+			try{
+				ois.close();
+				fin.close();
+			}catch(IOException ioe){}
+		}
 		
 	}
 	
