@@ -82,4 +82,9 @@ public class Data {
 	public void setmemo(String memo){
 		this.memo = memo;
 	}
+	
+	public String toString(){
+		return getyear()+","+getmonth()+","+getdate()+","+getday()+","
+	+getuser()+","+getcheck()+","+getDoList()+","+getmemo();
+	}
 }

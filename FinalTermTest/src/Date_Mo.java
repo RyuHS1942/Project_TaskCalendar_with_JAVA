@@ -1,8 +1,12 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -16,108 +20,110 @@ import javax.swing.JTextField;
 
 
 public class Date_Mo extends JFrame{
-	int year, month, date, check;
+	int year, month, date, dayorder;
 	String user;
 	String doit, memo;
+	boolean check;
 	
-	JPanel ListP;
-	JLabel ListL;
-	JButton ListAdd;
+	JPanel Date;
+	JPanel UpP;
+	JPanel DownP;
 	
-	JPanel inListP;
-	JCheckBox ListC;
-	JTextField ListTF;
-	JButton Delete;
-	JScrollPane ListS;
+	JButton add;
+	JButton delete;
 	
-	JPanel MemoP;
-	JLabel MemoL;
-	JTextArea MemoA;
-	JScrollPane MemoS;
+	JLabel List;
+	JLabel Memo;
 	
-	Calendal_Mo Calendal = new Calendal_Mo();
-	Login_Mo Login = new Login_Mo();
+	JTextField list;
+	JCheckBox box;
 	
-	public Date_Mo(){
-		this.setTitle(Calendal.year+"/"+Calendal.month+"/"+Calendal.date);
-		this.setSize(350,400);
+	Calendal_Mo Calendal = new Calendal_Mo(year, month, date, dayorder);
+	Login_Mo Login = new Login_Mo(user);
+	ArrayList<Data> Data = new ArrayList<Data>();
+	
+	public Date_Mo(boolean check, String doit, String memo){
+		this.check = check;
+		this.doit = doit;
+		this.memo = memo;
+	}
+	
+	public void DateMo(){
+		this.setTitle(Login.user+"/"+Calendal.year+"/"+
+				Calendal.month+"/"+Calendal.date);
+		this.setSize(400,700);
 		this.setResizable(false);
-		this.setLayout(new BorderLayout());//상하 분리
-		//
-		ListP = new JPanel();
-		ListP.setSize(300,200);
-		ListP.setLayout(new BorderLayout());
+		this.setLayout(new BorderLayout());
 		
-		ListL = new JLabel("Do it List");
-		ListP.add(ListL, BorderLayout.SOUTH);
+		Date = new JPanel();
+		Date.setSize(395,695);
+		Date.setLayout(new BorderLayout());
+		this.add(Date,BorderLayout.CENTER);
 		
-		ListAdd = new JButton("+");
-		ListP.add(ListAdd,BorderLayout.SOUTH);
-		//
-		inListP = new JPanel();
-		inListP.setSize(300,180);
-		inListP.setLayout(new FlowLayout());
-		ListP.add(inListP,BorderLayout.CENTER);
+		UpP = new JPanel();
+		UpP.setSize(390,350);
+		Date.add(UpP,BorderLayout.NORTH);
+		UpP.setLayout(new BorderLayout());
 		
-		ListC = new JCheckBox();
-		inListP.add(ListC);
-		
-		ListTF = new JTextField(15);
-		inListP.add(ListTF);
-		
-		Delete = new JButton("-");
-		inListP.add(Delete);
-		
-		ListS = new JScrollPane();
-		ListS.setViewportView(inListP);
-		//
-		MemoP = new JPanel();
-		MemoP.setSize(300,200);
-		MemoP.setLayout(new BorderLayout());
-		
-		MemoL = new JLabel("Memo");
-		MemoP.add(MemoL,BorderLayout.SOUTH);
-		
-		MemoA = new JTextArea();
-		MemoP.add(MemoA,BorderLayout.CENTER);
-		//
-		this.add(ListP);
-		this.add(MemoP);
+		DownP = new JPanel();
+		DownP.setSize(390,300);
+		Date.add(DownP,BorderLayout.CENTER);
+		DownP.setLayout(new BorderLayout());
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//끝내면 저장하는 방식으로
 		this.setVisible(true);
 	}
 	
-	public void usercheck(){
-		if(user.equals(Login.get_User())){
-			
-		}else{}
-	}
-	
 	public void addDoList(){
+		int year,month,date,day;
+		String user,DoList,memo;
+		boolean check;
 		
+		year = Calendal.year;
+		month = Calendal.month;
+		date = Calendal.date;
+		day = Calendal.dayorder;
+		user = Login.get_User();
+		check = ListC.getSelectedIcon() != null;
+		DoList = ListTF.getText();
+		memo = MemoA.getText();
+		Data.add(new Data(year,month,date,day,user,check,DoList,memo));
 	}
 	
-	public boolean getCheck(){//체크 확인
-		if(check==1){
-			return true;
-		}else{
-			return false;
-		}
+	public void deleteDoList(){
+		int temp=0;
+		Data.remove(temp);
 	}
 	
 	public void saveData(){
-		ArrayList<Data> datas = new ArrayList<Data>();
+		FileOutputStream fout = null;
+		ObjectOutputStream oos = null;
+		try{
+			fout = new FileOutputStream("C:\\Users\\ryu\\Downloads\\data.txt");
+			oos = new ObjectOutputStream(fout);
+			
+			oos.writeObject(Data);
+			oos.reset();
+		}catch(Exception ex){
+		}finally{
+			try{
+				oos.close();
+				fout.close();
+			}catch(IOException ioe){}
+		}
+	}
+	
+	public void loadData(){
 		FileInputStream fin = null;
 		ObjectInputStream ois = null;
 		try{
 			fin = new FileInputStream("C:\\Users\\ryu\\Downloads\\data.txt");
 			ois = new ObjectInputStream(fin);
 			
-			ArrayList list = (ArrayList) ois.readObject();
-			for(int i=0;i<list.size();i++){
-				datas.add((Data) list.get(i));
-			}
+			//정보 불러오기
+			//할 일 추가
+			//메모에 추가
+			
 		}catch(Exception e){
 			System.out.println();
 		}finally{
@@ -126,10 +132,6 @@ public class Date_Mo extends JFrame{
 				fin.close();
 			}catch(IOException ioe){}
 		}
-		
-	}
-	
-	public void loadData(){
 		
 	}
 }
