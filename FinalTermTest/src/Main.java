@@ -7,7 +7,7 @@ public class Main {
 		
 		Login_Mo Login = new Login_Mo(user);
 		//Login.LoginMo();
-		Date_Mo date = new Date_Mo(true, null, null);
+		Date_Mo date = new Date_Mo(null);
 		date.DateMo();
 	}
 }

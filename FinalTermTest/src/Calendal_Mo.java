@@ -129,7 +129,7 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		}
 	}
 	//
-	public int StartP(int date,int dayorder){//날짜와 요일
+	public int StartP(int dayorder){//날짜와 요일
 		int time = 0;
 		if(date>7){
 			while(date>7){//첫째 주
@@ -155,7 +155,7 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		February();
 		int num = 0;
 		
-		startP = StartP(date,startP);//첫번째만 두번째는 다른 방식으로
+		startP = StartP(startP);//첫번째만 두번째는 다른 방식으로
 		//
 		for(int i=0;i<6;i++){
 			for(int j=0;j<day.length;j++){

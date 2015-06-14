@@ -2,6 +2,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.TextArea;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -22,80 +26,78 @@ import javax.swing.JTextField;
 public class Date_Mo extends JFrame{
 	int year, month, date, dayorder;
 	String user;
-	String doit, memo;
-	boolean check;
+	String memo;
 	
-	JPanel Date;
-	JPanel UpP;
-	JPanel DownP;
+	JScrollPane MemoS;
+	JTextArea MemoA;
 	
-	JButton add;
-	JButton delete;
-	
-	JLabel List;
-	JLabel Memo;
-	
-	JTextField list;
-	JCheckBox box;
+	JLabel MemoL;
+	JButton AddB;
+	JButton DelB;
+	JPanel BLP;
 	
 	Calendal_Mo Calendal = new Calendal_Mo(year, month, date, dayorder);
 	Login_Mo Login = new Login_Mo(user);
 	ArrayList<Data> Data = new ArrayList<Data>();
+	AddBut AddBut = new AddBut();
+	DelBut DelBut = new DelBut();
 	
-	public Date_Mo(boolean check, String doit, String memo){
-		this.check = check;
-		this.doit = doit;
+	public Date_Mo(String memo){
 		this.memo = memo;
 	}
 	
 	public void DateMo(){
-		this.setTitle(Login.user+"/"+Calendal.year+"/"+
-				Calendal.month+"/"+Calendal.date);
-		this.setSize(400,700);
-		this.setResizable(false);
+		this.setTitle(Calendal.year+"/"+Calendal.month+"/"+Calendal.date);
 		this.setLayout(new BorderLayout());
 		
-		Date = new JPanel();
-		Date.setSize(395,695);
-		Date.setLayout(new BorderLayout());
-		this.add(Date,BorderLayout.CENTER);
+		AddB = new JButton();
+		AddB.setText("ADD");
+		AddB.addActionListener(AddBut);
 		
-		UpP = new JPanel();
-		UpP.setSize(390,350);
-		Date.add(UpP,BorderLayout.NORTH);
-		UpP.setLayout(new BorderLayout());
+		DelB = new JButton();
+		DelB.setText("DEL");
+		DelB.addActionListener(DelBut);
 		
-		DownP = new JPanel();
-		DownP.setSize(390,300);
-		Date.add(DownP,BorderLayout.CENTER);
-		DownP.setLayout(new BorderLayout());
+		MemoL = new JLabel();
+		MemoL.setText("Memo");
 		
+		MemoA = new JTextArea(10,40);
+		MemoS = new JScrollPane();
+		MemoS = new JScrollPane(MemoA);
+		
+		BLP = new JPanel();
+		BLP.setLayout(new FlowLayout());
+		BLP.add(AddB);
+		BLP.add(DelB);
+		
+		this.add(BLP,BorderLayout.NORTH);
+		this.add(MemoS,BorderLayout.CENTER);
+		
+		this.pack();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//끝내면 저장하는 방식으로
 		this.setVisible(true);
 	}
 	
-	public void addDoList(){
+	public void addData(){//메모장으로 추가 시킬 것
 		int year,month,date,day;
-		String user,DoList,memo;
-		boolean check;
+		String user,memo;
 		
 		year = Calendal.year;
 		month = Calendal.month;
 		date = Calendal.date;
 		day = Calendal.dayorder;
 		user = Login.get_User();
-		check = ListC.getSelectedIcon() != null;
-		DoList = ListTF.getText();
 		memo = MemoA.getText();
-		Data.add(new Data(year,month,date,day,user,check,DoList,memo));
+		Data.add(new Data(year,month,date,day,user,memo));
 	}
 	
-	public void deleteDoList(){
+	public void delData(){
 		int temp=0;
 		Data.remove(temp);
 	}
 	
 	public void saveData(){
+		ArrayList<Data> Data = new ArrayList<Data>();
 		FileOutputStream fout = null;
 		ObjectOutputStream oos = null;
 		try{
@@ -114,15 +116,17 @@ public class Date_Mo extends JFrame{
 	}
 	
 	public void loadData(){
+		ArrayList<Data> Data = new ArrayList<Data>();
 		FileInputStream fin = null;
 		ObjectInputStream ois = null;
 		try{
 			fin = new FileInputStream("C:\\Users\\ryu\\Downloads\\data.txt");
 			ois = new ObjectInputStream(fin);
 			
-			//정보 불러오기
-			//할 일 추가
-			//메모에 추가
+			ArrayList data = (ArrayList) ois.readObject();
+			for(int i=0;i<data.size();i++){
+				Data.add((Data) data.get(i));
+			}
 			
 		}catch(Exception e){
 			System.out.println();
@@ -132,6 +136,15 @@ public class Date_Mo extends JFrame{
 				fin.close();
 			}catch(IOException ioe){}
 		}
-		
+	}
+	class AddBut implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			addData();
+		}
+	}
+	class DelBut implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			delData();
+		}
 	}
 }
