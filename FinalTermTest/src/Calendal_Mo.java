@@ -20,10 +20,10 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	int ty,tm,td,to;
 	
 	int startP;
-	int tempSP;
+	int tempSP = 0;
 	String[] day = {"SUN","MON","TUS","WED","THU","FRI","SAT"};//요일
 	int Month[] = {31,28,31,30,31,30,31,31,30,31,30,31};//날자 수;
-	int gap[] = {3,0,3,2,3,2,3,3,2,3,2,3};
+	int gap[] = {3,3,0,3,2,3,2,3,3,2,3,2,3};
 	int Date[][] = new int[6][day.length]; 
 	
 	JPanel CalendarP;
@@ -156,6 +156,7 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	public void InCalendar(){
 		int num = 0;
 		int temp = DayOrder(StartP()+tempSP);
+		System.out.println(StartP()+"/"+tempSP+"/"+temp);
 		//
 		February();
 		for(int i=0;i<6;i++){
@@ -211,48 +212,35 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	}
 	
 	public int DY(){
-		int temp;
-		if(((ty%4==0)&&(ty%100 !=0))||(ty%400==0)){
+		int temp = 0;;
+		if(((ty+1%4==0)&&(ty+1%100 !=0))||(ty+1%400==0)){
 			temp = -1;
-		}else if((ty%4==0)&&(ty%100 !=0)||(ty%400==0)){
-			temp = -1;
-		}else
-			temp = 0;
+		}
 		for(int i=0;i<Month.length;i++){
 			temp -= Month[i];
 		}
-		System.out.println(temp);
 		temp = DayOrder(temp);
-		System.out.println(temp);
 		return temp;
 	}
 	
 	public int DM(){
 		int temp = 0;
-		if(((ty+1%4==0)&&(ty+1%100 !=0))||(ty+1%400==0)){
-			temp = 1;
-		}
-		temp -= gap[tm-1];
+		temp -= gap[tm];
 		if(temp<1){
 			while(temp<1){
 				temp += 7;
 			}
 		}
-		System.out.println(temp);
 		return temp;
 	}
 	
 	public int AM(){
 		int temp = 0;
-		if(tm>13){
-			temp += gap[tm%12];
-		}else
-		temp += gap[tm];
+		temp += gap[tm-1];
 		if(temp>7){
 		while(temp>7){
 			temp -= 7;
 		}}
-		System.out.println(temp);
 		return temp;
 	}
 	
@@ -261,11 +249,10 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		for(int i=0;i<Month.length;i++){
 			temp += Month[i];
 		}
-		System.out.println(temp);
 		temp = DayOrder(temp);
-		System.out.println(temp);
 		return temp;
 	}
+	
 	public int DayOrder(int dayorder){//1~7사이의 숫자로 만들기
 		while(dayorder<1){
 			dayorder += 7;
