@@ -19,6 +19,10 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	int year,month,date,dayorder;//사용할 날자
 	int ty,tm,td,to;
 	
+	int datei;
+	int datej;
+	
+	int tempSPA =0;
 	int startP;
 	int tempSP = 0;
 	String[] day = {"SUN","MON","TUS","WED","THU","FRI","SAT"};//요일
@@ -43,39 +47,7 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	Calendar cal = Calendar.getInstance();
 	Move Move = new Move();
 	DateMo DateMo = new DateMo();
-	
-	public int getyear(){
-		return year;
-	}
-	
-	public int getmonth(){
-		return month;
-	}
-	
-	public int getdate(){
-		return date;
-	}
-	
-	public int getdayorder(){
-		return dayorder;
-	}
-	
-	public void setyear(int year){
-		this.year = year;
-	}
-	
-	public void setmonth(int month){
-		this.month = month;
-	}
-	
-	public void setdate(int date){
-		this.date = date;
-	}
-	
-	public void setdayorder(int dayorder){
-		this.dayorder = dayorder;
-	}
-	
+
 	public void CalendarMo(){
 		this.setTitle("Calendal");
 		this.setSize(700, 400);
@@ -154,10 +126,11 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	}
 	
 	public void InCalendar(){
-		int num = 0;
-		int temp = DayOrder(StartP()+tempSP);
-		System.out.println(StartP()+"/"+tempSP+"/"+temp);
-		//
+		int num = 1;
+		int temp = 0;
+		tempSPA += tempSP;
+		temp = DayOrder(StartP()+tempSPA);
+		
 		February();
 		for(int i=0;i<6;i++){
 			for(int j=0;j<day.length;j++){
@@ -196,6 +169,8 @@ public class Calendal_Mo<todaydate> extends JFrame{
 			for(int j=0;j<day.length;j++){
 				dateB[i][j]=new JButton();
 				dateB[i][j].addActionListener(DateMo);
+				datei = i;
+				datej = j;
 				if(Date[i][j]==0){
 					dateB[i][j].setText("");
 					dateB[i][j].setEnabled(false);
@@ -213,8 +188,10 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	
 	public int DY(){
 		int temp = 0;;
-		if(((ty+1%4==0)&&(ty+1%100 !=0))||(ty+1%400==0)){
+		if(((ty)%4==0)&&(ty)%100 !=0||(ty)%400==0){
 			temp = -1;
+		}else if((((ty+1)%4==0)&&(ty+1)%100 !=0||(ty+1)%400==0)){
+			temp = +1;
 		}
 		for(int i=0;i<Month.length;i++){
 			temp -= Month[i];
@@ -252,7 +229,6 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		temp = DayOrder(temp);
 		return temp;
 	}
-	
 	public int DayOrder(int dayorder){//1~7사이의 숫자로 만들기
 		while(dayorder<1){
 			dayorder += 7;

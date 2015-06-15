@@ -46,7 +46,7 @@ public class Date_Mo extends JFrame{
 	SchBut SchBut = new SchBut();
 
 	public void DateMo(){
-		this.setTitle(Calendal.year+"/"+Calendal.month+"/"+Calendal.date);
+		this.setTitle(Calendal.td+"/"+Calendal.tm+"/"+Calendal.td);
 		this.setLayout(new BorderLayout());
 		
 		MemoTF = new JTextField(10);
@@ -117,7 +117,7 @@ public class Date_Mo extends JFrame{
 		int series = 0;
 		int year,month,date,day;
 		String user,memo;
-		user = Login.get_User();
+		user = Login.user;
 		year = Calendal.year;
 		month = Calendal.month;
 		date = Calendal.date;
@@ -126,7 +126,7 @@ public class Date_Mo extends JFrame{
 		
 		System.out.println(series+"/"+user+"/"+year+"/"+month+"/"+date+"/"+day+"/"+memo);
 		
-		Data.add(new Data(series,user,year,month,date,day,memo));
+		Data.add(new Data(series,user,year,month,date,memo));
 		
 		series++;
 		
@@ -157,7 +157,7 @@ public class Date_Mo extends JFrame{
 			
 			
 			for(int i=0;i<Data.size();i++){
-				if(Data.get(i).user.equals(Login.get_User())){
+				if(Data.get(i).user.equals()){
 					if(Data.get(i).year==Calendal.year){
 						if(Data.get(i).month==Calendal.month){
 							if(Data.get(i).date==Calendal.date){

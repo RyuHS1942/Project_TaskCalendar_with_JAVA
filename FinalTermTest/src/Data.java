@@ -5,13 +5,11 @@ public class Data {
 	static String user;
 	static String memo;
 	
-	public Data(int series,String user,int year,int month,int date,int day,
-			String memo){
+	public Data(int series,String user,int year,int month,int date,String memo){
 		this.series = series;
 		this.year = year;
 		this.month = month;
 		this.date = date;
-		this.day = day;
 		this.user = user;
 		this.memo = memo;
 	}
