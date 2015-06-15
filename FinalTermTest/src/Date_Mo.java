@@ -32,10 +32,6 @@ import javax.swing.JTextField;
 
 
 public class Date_Mo extends JFrame{
-	int series = 0;
-	int year,month,date;
-	String user,memo;
-	
 	JScrollPane MemoS;
 	JTextArea MemoA;
 	JTextField MemoTF;
@@ -52,19 +48,14 @@ public class Date_Mo extends JFrame{
 	SchBut SchBut = new SchBut();
 	
 	Calendal_Mo CalendalMo;
-	
-	ArrayList<Data> Data = new ArrayList<Data>();
+	ArrayList<Data> Data;
 
-	public void DateMo(Calendal_Mo CalendalMo){
+	public void DateMo(Calendal_Mo CalendalMo,ArrayList<Data> Data){
 		this.setLayout(new BorderLayout());
 		this.CalendalMo = CalendalMo;
+		this.Data = Data;
 		
-		user = Login_Mo.user;
-		year = CalendalMo.ty;
-		month = CalendalMo.tm;
-		date = CalendalMo.Date[CalendalMo.datei][CalendalMo.datej];
-
-		this.setTitle(user+"/"+CalendalMo.ty+"/"+CalendalMo.tm+"/"+CalendalMo.Date[CalendalMo.datei][CalendalMo.datej]);
+		this.setTitle(Login_Mo.user+"/"+CalendalMo.ty+"/"+CalendalMo.tm+"/"+CalendalMo.Date[CalendalMo.datei][CalendalMo.datej]);
 		
 		MemoTF = new JTextField(10);
 		
@@ -136,26 +127,28 @@ public class Date_Mo extends JFrame{
 	}
 	
 	public void saveData(){
+		String user2 = Login_Mo.user;
+		int year2 = CalendalMo.ty;
+		int month2 = CalendalMo.tm;
+		int date2 = CalendalMo.Date[CalendalMo.datei][CalendalMo.datej];
+		String memo2 = MemoA.getText();
 		
-		memo = MemoA.getText();
-		Data.add(new Data(series,user,year,month,date,memo));
-		System.out.println(series+"/"+user+"/"+year+"/"+month+"/"+date+"/"+memo);
-		series++;
+		Data.add(new Data(user2,year2,month2,date2,memo2));
 		
 		FileWriter fw = null;
 		try{
 			fw = new FileWriter("C:\\Users\\ryu\\Downloads\\data.txt");
 			for(int i=0;i<Data.size();i++){
-				fw.write(series+"^^"+user+"^^"+
-						year+"^^"+month+"^^"+
-						date+"^^"+memo+"\n");
+				fw.write(Data.get(i).getuser()+"^^"+Data.get(i).getyear()+"^^"+Data.get(i).getmonth()
+						+"^^"+Data.get(i).getdate()+"^^"+Data.get(i).getmemo()+"\n");
+				System.out.println(Data.get(i).toString());
 				}
 		}catch(Exception ex){
-		}//finally{
-			//try{
-				//fw.close();
-			//}catch(IOException e){}
-		//}
+		}finally{
+			try{
+				fw.close();
+			}catch(IOException e){}
+		}
 	}
 	
 	public void loadData(){
@@ -166,14 +159,10 @@ public class Date_Mo extends JFrame{
 			while((sCurrentLine = br.readLine()) != null){
 				String[] info = sCurrentLine.split("^^");
 				for(int i=0;i<Data.size();i++){
-					if(info[1].equals(Login_Mo.user)){
-						System.out.println(Login_Mo.user);
-						if(info[2].equals(year)){
-							System.out.println(year);
-							if(info[3].equals(month)){
-								System.out.println(month);
-								if(info[4].equals(date)){
-									System.out.println(date);
+					if(info[0].equals(Login_Mo.user)){
+						if(info[1].equals(CalendalMo.ty)){
+							if(info[2].equals(CalendalMo.tm)){
+								if(info[3].equals(CalendalMo.Date[CalendalMo.datei][CalendalMo.datej])){
 									MemoA.append(Data.get(i).getmemo());
 								}
 							}

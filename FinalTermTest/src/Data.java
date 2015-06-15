@@ -1,21 +1,16 @@
 
 public class Data {
 	
-	static int series,year, month, date, day;
+	static int year, month, date, day;
 	static String user;
 	static String memo;
 	
-	public Data(int series,String user,int year,int month,int date,String memo){
-		this.series = series;
+	public Data(String user,int year,int month,int date,String memo){
 		this.year = year;
 		this.month = month;
 		this.date = date;
 		this.user = user;
 		this.memo = memo;
-	}
-	
-	public int getseries(){
-		return series;
 	}
 	
 	public int getyear(){
@@ -38,9 +33,6 @@ public class Data {
 		return memo;
 	}
 	
-	public void setseries(int series){
-		this.series = series;
-	}
 	public void setyear(int year){
 		this.year = year;
 	}
@@ -70,7 +62,6 @@ public class Data {
 	}
 	
 	public String toString(){
-		return getseries()+","+getyear()+","+getmonth()+","+getdate()+","
-	+getuser()+","+getmemo();
+		return getyear()+","+getmonth()+","+getdate()+","+getuser()+","+getmemo();
 	}
 }

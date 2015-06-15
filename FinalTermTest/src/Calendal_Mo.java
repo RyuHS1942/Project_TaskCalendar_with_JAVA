@@ -19,6 +19,8 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	int year,month,date,dayorder;//사용할 날자
 	int ty,tm,td,to;
 	
+	int series = 0;
+	
 	int datei;
 	int datej;
 	
@@ -44,6 +46,9 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	JButton dateB[][] = new JButton[6][day.length];
 	
 	Calendar cal = Calendar.getInstance();
+
+	ArrayList<Data> Data = new ArrayList<Data>();
+	
 	Move Move = new Move();
 	DateMo DateMo = new DateMo();
 	TodayMove TodayMove = new TodayMove();
@@ -126,10 +131,9 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		return dayorder - (date%7) + 1;
 	}
 	
-	public void InCalendar(){
+	public void InCalendar(int tempSPA){
 		int num = 1;
 		int temp = 0;
-		tempSPA += tempSP;
 		temp = DayOrder(StartP()+tempSPA);
 		
 		February();
@@ -147,6 +151,11 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		}
 	}
 	
+	public int CaltempSPA(){
+		 tempSPA += tempSP;
+		 return tempSPA;
+	}
+	
 	private String toString(int i) {
 		String j;
 		j = i+"";
@@ -154,7 +163,7 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	}
 	
 	public void ShowCalendar(){//달력의 스켈레톤
-		InCalendar();
+		InCalendar(CaltempSPA());
 		
 		for(int i=0;i<day.length;i++){
 			dayB = new JButton(day[i]);//비활성화
@@ -258,10 +267,6 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		}
 	}
 	
-	public void add_new_user(){
-		
-	}
-	
 	class Move implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			removeCalender();
@@ -293,8 +298,8 @@ public class Calendal_Mo<todaydate> extends JFrame{
 					}
 				}
 			}
-			Date_Mo Date = new Date_Mo();
-			Date.DateMo(Calendal_Mo.this);
+			Date_Mo Date_Mo = new Date_Mo();
+			Date_Mo.DateMo(Calendal_Mo.this, Data);
 		}
 	}
 	
@@ -302,9 +307,6 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		public void actionPerformed(ActionEvent e){
 			removeCalender();
 			setToday();
-			tempSPA = 0;
-			YM.setText((ty)+"  /  "+(tm));
-			ShowCalendar();
 		}
 	}
 }
