@@ -105,7 +105,7 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		Leftmove.addActionListener(Move);
 		UpP.add(Leftmove);
 		
-		YM = new JLabel((year)+"  /  "+(month));
+		YM = new JLabel((ty)+"  /  "+(tm));
 		YM.setSize(60, 0);
 		UpP.add(YM);
 		
@@ -122,7 +122,7 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		DownP.setSize(685,340);
 		CalendarP.add(DownP,BorderLayout.CENTER);
 		DownP.setLayout(new GridLayout(7,7));
-		
+
 		ShowCalendar();
 				
 		this.setVisible(true);
@@ -131,38 +131,39 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	
 	public void setToday(){//오늘 날자를 불러오기
 		year = cal.get(Calendar.YEAR);
-		month = cal.get(Calendar.MONTH)+1;
+		month = cal.get(Calendar.MONTH);
 		date = cal.get(Calendar.DATE);//오늘 날자
 		dayorder = cal.get(Calendar.DAY_OF_WEEK);
 		ty = year;
-		tm = month;
+		tm = month+1;
 		td = date;
 		to = dayorder;
 		System.out.println(tm+"/"+td+"/"+to);
 	}
 	
 	public void February(){//윤년 계산
-		if(year%4==0&&year%100 !=0||year%400==0){
-			 Month[1]++;
+		if(ty%4==0&&ty%100 !=0||ty%400==0){
+			 Month[1] = 29;
 		}else{
 			Month[1] = 28;
 		}
 	}
 	
-	public int StartP(){
+	public int StartP(){//기준 달의 1일의 요일
 		return dayorder - (date%7) + 1;
 	}
+	
 	public void InCalendar(){
-		February();
 		int num = 0;
 		int temp = DayOrder(StartP()+tempSP);
 		//
+		February();
 		for(int i=0;i<6;i++){
 			for(int j=0;j<day.length;j++){
-				if(temp>0){
+				if(temp>1){
 					Date[i][j] = 0;
 					temp--;
-				}else if(temp==0 && num<Month[month]+1){
+				}else if(temp==1 && num<=Month[tm-1]){
 					Date[i][j] = num++;
 				}else{
 					Date[i][j] = 0;
@@ -194,7 +195,6 @@ public class Calendal_Mo<todaydate> extends JFrame{
 			for(int j=0;j<day.length;j++){
 				dateB[i][j]=new JButton();
 				dateB[i][j].addActionListener(DateMo);
-				date = Date[i][j];
 				if(Date[i][j]==0){
 					dateB[i][j].setText("");
 					dateB[i][j].setEnabled(false);
@@ -207,67 +207,91 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	}
 	
 	public String dayordertoday(int dayorder){//요일을 문자로
-		return day[dayorder];
+		return day[dayorder-1];
 	}
 	
 	public int DY(){
-		int temp = 6;
+		int temp;
+		if(((ty%4==0)&&(ty%100 !=0))||(ty%400==0)){
+			temp = -1;
+		}else if((ty%4==0)&&(ty%100 !=0)||(ty%400==0)){
+			temp = -1;
+		}else
+			temp = 0;
+		for(int i=0;i<Month.length;i++){
+			temp -= Month[i];
+		}
+		System.out.println(temp);
+		temp = DayOrder(temp);
+		System.out.println(temp);
 		return temp;
 	}
 	
 	public int DM(){
 		int temp = 0;
-		temp -= gap[month-1];
+		if(((ty+1%4==0)&&(ty+1%100 !=0))||(ty+1%400==0)){
+			temp = 1;
+		}
+		temp -= gap[tm-1];
 		if(temp<1){
-		while(temp<1){
-			temp += 7;
-		}}
+			while(temp<1){
+				temp += 7;
+			}
+		}
+		System.out.println(temp);
 		return temp;
 	}
 	
 	public int AM(){
 		int temp = 0;
-		if(month-2<0){
-			temp += gap[11];
+		if(tm>13){
+			temp += gap[tm%12];
 		}else
-		temp += gap[month-2];
-		if(temp>8){
-		while(temp>8){
+		temp += gap[tm];
+		if(temp>7){
+		while(temp>7){
 			temp -= 7;
 		}}
+		System.out.println(temp);
 		return temp;
 	}
 	
 	public int AY(){
-		int temp = 1;
+		int temp=0;
+		for(int i=0;i<Month.length;i++){
+			temp += Month[i];
+		}
+		System.out.println(temp);
+		temp = DayOrder(temp);
+		System.out.println(temp);
 		return temp;
 	}
-	public int DayOrder(int dayorder){
+	public int DayOrder(int dayorder){//1~7사이의 숫자로 만들기
 		while(dayorder<1){
 			dayorder += 7;
-		}while(dayorder>8){
+		}while(dayorder>7){
 			dayorder -= 7;
 		}
 		return dayorder;
 	}
 	
-	public void removeCalender(){
+	public void removeCalender(){//달력 삭제
 		for(int i=0;i<6*7;i++){
 			DownP.removeAll();
 		}
 	}
 
-	public void moveMonth(int mon){
-		month += mon;
-		if(month>12){
-			while(month>12){
-				year++;
-				month -= 12;
+	public void moveMonth(int mon){//달의 이동
+		tm += mon;
+		if(tm>12){
+			while(tm>12){
+				ty++;
+				tm -= 12;
 			}
-		}else if(month<1){
-			while(month<1){
-				year--;
-				month += 12;
+		}else if(tm<1){
+			while(tm<1){
+				ty--;
+				tm += 12;
 			}
 		}
 	}
@@ -278,20 +302,17 @@ public class Calendal_Mo<todaydate> extends JFrame{
 			if(e.getSource()==LeftMove){
 				moveMonth(-12);
 				tempSP = DY();
-				YM.setText((year)+"  /  "+(month));
 			}else if(e.getSource()==Leftmove){
 				moveMonth(-1);
 				tempSP = DM();
-				YM.setText((year)+"  /  "+(month));
 			}else if(e.getSource()==Rightmove){
 				moveMonth(+1);
 				tempSP = AM();
-				YM.setText((year)+"  /  "+(month));
 			}else if(e.getSource()==RightMove){
 				moveMonth(+12);
-				tempSP = AY();
-				YM.setText((year)+"  /  "+(month));
+				tempSP = AY();	
 			}
+			YM.setText((ty)+"  /  "+(tm));
 			ShowCalendar();
 		}
 	}

@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -10,6 +11,10 @@ public class Login_Mo extends JFrame{
 	JLabel LoginL;
 	JTextField LoginTF;
 	JButton LoginB;
+	
+	public String getuser(){
+		return user;
+	}
 	
 	public void LoginMo(){
 		this.setTitle("Login");
@@ -23,7 +28,7 @@ public class Login_Mo extends JFrame{
 		LoginP.add(LoginL);
 		
 		LoginTF = new JTextField(10);
-		user = LoginTF.getText();
+		
 		LoginP.add(LoginTF);
 		
 		LoginB = new JButton("enter");
@@ -33,12 +38,10 @@ public class Login_Mo extends JFrame{
 		
 		this.add(LoginP);
 		
+		System.out.println(LoginTF.getText());
+		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-	}
-	
-	public String get_User(){
-		return user;
 	}
 	
 	class ListenForButton implements ActionListener{

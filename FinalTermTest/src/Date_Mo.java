@@ -29,21 +29,27 @@ import javax.swing.JTextField;
 public class Date_Mo extends JFrame{
 	JScrollPane MemoS;
 	JTextArea MemoA;
+	JTextField MemoTF;
 	
-	JLabel MemoL;
 	JButton AddB;
 	JButton DelB;
+	JButton ModB;
+	JButton SchB;
 	JPanel BLP;
 	
+	static ArrayList<Data> Data = new ArrayList<Data>();
 	Calendal_Mo Calendal = new Calendal_Mo();
 	Login_Mo Login = new Login_Mo();
-	ArrayList<Data> Data = new ArrayList<Data>();
 	AddBut AddBut = new AddBut();
 	DelBut DelBut = new DelBut();
+	ModBut ModBut = new ModBut();
+	SchBut SchBut = new SchBut();
 
 	public void DateMo(){
 		this.setTitle(Calendal.year+"/"+Calendal.month+"/"+Calendal.date);
 		this.setLayout(new BorderLayout());
+		
+		MemoTF = new JTextField(10);
 		
 		AddB = new JButton();
 		AddB.setText("ADD");
@@ -53,18 +59,26 @@ public class Date_Mo extends JFrame{
 		DelB.setText("DEL");
 		DelB.addActionListener(DelBut);
 		
-		MemoL = new JLabel();
-		MemoL.setText("Memo");
+		ModB = new JButton();
+		ModB.setText("MOD");
+		ModB.addActionListener(ModBut);
+		
+		SchB = new JButton();
+		SchB.setText("SCH");
+		SchB.addActionListener(SchBut);
 		
 		MemoA = new JTextArea(10,40);
+		MemoA.setEnabled(false);
 		MemoS = new JScrollPane();
 		MemoS = new JScrollPane(MemoA);
-		MemoS.setEnabled(false);
 		
 		BLP = new JPanel();
 		BLP.setLayout(new FlowLayout());
+		BLP.add(MemoTF);
 		BLP.add(AddB);
 		BLP.add(DelB);
+		BLP.add(ModB);
+		BLP.add(SchB);
 		
 		this.add(BLP,BorderLayout.NORTH);
 		this.add(MemoS,BorderLayout.CENTER);
@@ -80,29 +94,42 @@ public class Date_Mo extends JFrame{
 	}
 	
 	public void addData(){//메모장으로 추가 시킬 것
+		MemoA.append(MemoTF.getText()+"\n");
+	}
+	
+	public void delData(){//데이터 자체를 삭제하기
+		MemoA.setText("");
+	}
+	
+	public void modData(){
+		MemoA.setText(MemoTF.getText());
+	}
+	
+	public void schData(){
+		for(int i=0;i<Data.size();i++){
+			if(MemoTF.getText().contains(Data.get(i).memo)){
+				MemoA.append(Data.get(i).toString());
+			}
+		}
+	}
+	
+	public void saveData(){
+		int series = 0;
 		int year,month,date,day;
 		String user,memo;
-		
+		user = Login.get_User();
 		year = Calendal.year;
 		month = Calendal.month;
 		date = Calendal.date;
 		day = Calendal.dayorder;
-		user = Login.get_User();
 		memo = MemoA.getText();
-		Data.add(new Data(year,month,date,day,user,memo));
-	}
-	
-	public void delData(){//데이터 자체를 삭제하기
-		int temp=0;
-		Data.remove(temp);
-	}
-	
-	public static void schData(){
 		
-	}
-	
-	public void saveData(){
-		ArrayList<Data> Data = new ArrayList<Data>();
+		System.out.println(series+"/"+user+"/"+year+"/"+month+"/"+date+"/"+day+"/"+memo);
+		
+		Data.add(new Data(series,user,year,month,date,day,memo));
+		
+		series++;
+		
 		FileOutputStream fout = null;
 		ObjectOutputStream oos = null;
 		try{
@@ -111,6 +138,7 @@ public class Date_Mo extends JFrame{
 			
 			oos.writeObject(Data);
 			oos.reset();
+			
 		}catch(Exception ex){
 		}finally{
 			try{
@@ -121,16 +149,23 @@ public class Date_Mo extends JFrame{
 	}
 	
 	public void loadData(){
-		ArrayList<Data> Data = new ArrayList<Data>();
 		FileInputStream fin = null;
 		ObjectInputStream ois = null;
 		try{
 			fin = new FileInputStream("C:\\Users\\ryu\\Downloads\\data.txt");
 			ois = new ObjectInputStream(fin);
 			
-			ArrayList data = (ArrayList) ois.readObject();
-			for(int i=0;i<data.size();i++){
-				Data.add((Data) data.get(i));
+			
+			for(int i=0;i<Data.size();i++){
+				if(Data.get(i).user.equals(Login.get_User())){
+					if(Data.get(i).year==Calendal.year){
+						if(Data.get(i).month==Calendal.month){
+							if(Data.get(i).date==Calendal.date){
+								MemoA.setText(Data.get(i).memo);
+							}
+						}
+					}
+				}
 			}
 			
 		}catch(Exception e){
@@ -150,6 +185,16 @@ public class Date_Mo extends JFrame{
 	class DelBut implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			delData();
+		}
+	}
+	class ModBut implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			modData();
+		}
+	}
+	class SchBut implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			schData();
 		}
 	}
 }
