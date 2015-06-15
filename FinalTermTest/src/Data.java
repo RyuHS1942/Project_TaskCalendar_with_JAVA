@@ -30,10 +30,6 @@ public class Data {
 		return date;
 	}
 	
-	public int getday(){
-		return day;
-	}
-	
 	public String getuser(){
 		return user;
 	}
@@ -74,7 +70,7 @@ public class Data {
 	}
 	
 	public String toString(){
-		return getseries()+","+getyear()+","+getmonth()+","+getdate()+","+getday()+","
+		return getseries()+","+getyear()+","+getmonth()+","+getdate()+","
 	+getuser()+","+getmemo();
 	}
 }

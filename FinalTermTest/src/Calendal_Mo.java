@@ -23,7 +23,6 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	int datej;
 	
 	int tempSPA =0;
-	int startP;
 	int tempSP = 0;
 	String[] day = {"SUN","MON","TUS","WED","THU","FRI","SAT"};//요일
 	int Month[] = {31,28,31,30,31,30,31,31,30,31,30,31};//날자 수;
@@ -47,13 +46,14 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	Calendar cal = Calendar.getInstance();
 	Move Move = new Move();
 	DateMo DateMo = new DateMo();
-
-	public void CalendarMo(){
+	TodayMove TodayMove = new TodayMove();
+	Login_Mo Login_Mo;//check
+	public void CalendarMo(Login_Mo Login_Mo){
 		this.setTitle("Calendal");
 		this.setSize(700, 400);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());
-		
+		this.Login_Mo = Login_Mo;//check
 		CalendarP = new JPanel();
 		CalendarP.setSize(690,390);
 		CalendarP.setLayout(new BorderLayout());
@@ -67,6 +67,7 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		UpP.setLayout(new FlowLayout(FlowLayout.CENTER,40,0));
 		
 		TodayBut = new JButton(ty+"/"+tm+"/"+td);
+		TodayBut.addActionListener(TodayMove);
 		UpP.add(TodayBut);
 		
 		LeftMove = new JButton("<<");
@@ -169,8 +170,6 @@ public class Calendal_Mo<todaydate> extends JFrame{
 			for(int j=0;j<day.length;j++){
 				dateB[i][j]=new JButton();
 				dateB[i][j].addActionListener(DateMo);
-				datei = i;
-				datej = j;
 				if(Date[i][j]==0){
 					dateB[i][j].setText("");
 					dateB[i][j].setEnabled(false);
@@ -259,6 +258,10 @@ public class Calendal_Mo<todaydate> extends JFrame{
 		}
 	}
 	
+	public void add_new_user(){
+		
+	}
+	
 	class Move implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			removeCalender();
@@ -282,8 +285,26 @@ public class Calendal_Mo<todaydate> extends JFrame{
 	
 	class DateMo implements ActionListener{
 		public void actionPerformed(ActionEvent e){
+			for(int i=0;i<6;i++){
+				for(int j=0;j<day.length;j++){
+					if(e.getSource()==dateB[i][j]){
+						datei = i;
+						datej = j;
+					}
+				}
+			}
 			Date_Mo Date = new Date_Mo();
-			Date.DateMo();
+			Date.DateMo(Calendal_Mo.this);
+		}
+	}
+	
+	class TodayMove implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			removeCalender();
+			setToday();
+			tempSPA = 0;
+			YM.setText((ty)+"  /  "+(tm));
+			ShowCalendar();
 		}
 	}
 }

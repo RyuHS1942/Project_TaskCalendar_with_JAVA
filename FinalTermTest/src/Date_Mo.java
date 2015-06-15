@@ -8,12 +8,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -27,6 +32,10 @@ import javax.swing.JTextField;
 
 
 public class Date_Mo extends JFrame{
+	int series = 0;
+	int year,month,date;
+	String user,memo;
+	
 	JScrollPane MemoS;
 	JTextArea MemoA;
 	JTextField MemoTF;
@@ -37,17 +46,25 @@ public class Date_Mo extends JFrame{
 	JButton SchB;
 	JPanel BLP;
 	
-	static ArrayList<Data> Data = new ArrayList<Data>();
-	Calendal_Mo Calendal = new Calendal_Mo();
-	Login_Mo Login = new Login_Mo();
 	AddBut AddBut = new AddBut();
 	DelBut DelBut = new DelBut();
 	ModBut ModBut = new ModBut();
 	SchBut SchBut = new SchBut();
+	
+	Calendal_Mo CalendalMo;
+	
+	ArrayList<Data> Data = new ArrayList<Data>();
 
-	public void DateMo(){
-		this.setTitle(Calendal.td+"/"+Calendal.tm+"/"+Calendal.td);
+	public void DateMo(Calendal_Mo CalendalMo){
 		this.setLayout(new BorderLayout());
+		this.CalendalMo = CalendalMo;
+		
+		user = Login_Mo.user;
+		year = CalendalMo.ty;
+		month = CalendalMo.tm;
+		date = CalendalMo.Date[CalendalMo.datei][CalendalMo.datej];
+
+		this.setTitle(user+"/"+CalendalMo.ty+"/"+CalendalMo.tm+"/"+CalendalMo.Date[CalendalMo.datei][CalendalMo.datej]);
 		
 		MemoTF = new JTextField(10);
 		
@@ -85,6 +102,11 @@ public class Date_Mo extends JFrame{
 		
 		this.pack();
 		this.addWindowListener(new WindowAdapter(){
+			public void windowOpened(WindowEvent e){
+				loadData();
+			}
+		});
+		this.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e){
 				saveData();
 				dispose();
@@ -107,75 +129,59 @@ public class Date_Mo extends JFrame{
 	
 	public void schData(){
 		for(int i=0;i<Data.size();i++){
-			if(MemoTF.getText().contains(Data.get(i).memo)){
+			if(MemoTF.getText().contains(Data.get(i).getmemo())){
 				MemoA.append(Data.get(i).toString());
 			}
 		}
 	}
 	
 	public void saveData(){
-		int series = 0;
-		int year,month,date,day;
-		String user,memo;
-		user = Login.user;
-		year = Calendal.year;
-		month = Calendal.month;
-		date = Calendal.date;
-		day = Calendal.dayorder;
+		
 		memo = MemoA.getText();
-		
-		System.out.println(series+"/"+user+"/"+year+"/"+month+"/"+date+"/"+day+"/"+memo);
-		
 		Data.add(new Data(series,user,year,month,date,memo));
-		
+		System.out.println(series+"/"+user+"/"+year+"/"+month+"/"+date+"/"+memo);
 		series++;
 		
-		FileOutputStream fout = null;
-		ObjectOutputStream oos = null;
+		FileWriter fw = null;
 		try{
-			fout = new FileOutputStream("C:\\Users\\ryu\\Downloads\\data.txt");
-			oos = new ObjectOutputStream(fout);
-			
-			oos.writeObject(Data);
-			oos.reset();
-			
+			fw = new FileWriter("C:\\Users\\ryu\\Downloads\\data.txt");
+			for(int i=0;i<Data.size();i++){
+				fw.write(series+"^^"+user+"^^"+
+						year+"^^"+month+"^^"+
+						date+"^^"+memo+"\n");
+				}
 		}catch(Exception ex){
-		}finally{
-			try{
-				oos.close();
-				fout.close();
-			}catch(IOException ioe){}
-		}
+		}//finally{
+			//try{
+				//fw.close();
+			//}catch(IOException e){}
+		//}
 	}
 	
 	public void loadData(){
-		FileInputStream fin = null;
-		ObjectInputStream ois = null;
+		BufferedReader br = null;
 		try{
-			fin = new FileInputStream("C:\\Users\\ryu\\Downloads\\data.txt");
-			ois = new ObjectInputStream(fin);
-			
-			
-			for(int i=0;i<Data.size();i++){
-				if(Data.get(i).user.equals()){
-					if(Data.get(i).year==Calendal.year){
-						if(Data.get(i).month==Calendal.month){
-							if(Data.get(i).date==Calendal.date){
-								MemoA.setText(Data.get(i).memo);
+			String sCurrentLine;
+			br = new BufferedReader(new FileReader("C:\\Users\\ryu\\Downloads\\data.txt"));
+			while((sCurrentLine = br.readLine()) != null){
+				String[] info = sCurrentLine.split("^^");
+				for(int i=0;i<Data.size();i++){
+					if(info[1].equals(Login_Mo.user)){
+						System.out.println(Login_Mo.user);
+						if(info[2].equals(year)){
+							System.out.println(year);
+							if(info[3].equals(month)){
+								System.out.println(month);
+								if(info[4].equals(date)){
+									System.out.println(date);
+									MemoA.append(Data.get(i).getmemo());
+								}
 							}
 						}
 					}
 				}
 			}
-			
-		}catch(Exception e){
-			System.out.println();
-		}finally{
-			try{
-				ois.close();
-				fin.close();
-			}catch(IOException ioe){}
-		}
+		}catch(Exception e){}
 	}
 	class AddBut implements ActionListener{
 		public void actionPerformed(ActionEvent e){
